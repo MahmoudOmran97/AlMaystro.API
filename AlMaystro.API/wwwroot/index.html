@@ -1,0 +1,441 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منيو كوافير المايسترو - ALMAYSTRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-red: #cc2b2b;
+            --black: #1a1a1a;
+            --bg-texture: #f8f5f0;
+            --hover-bg: #fff5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-texture);
+            color: var(--black);
+        }
+
+        .header {
+            background-color: var(--black);
+            padding: 30px 10px;
+            text-align: center;
+            border-bottom: 6px solid var(--main-red);
+        }
+
+        .logo-img {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 4px solid var(--main-red);
+            object-fit: contain;
+        }
+
+        .header h1 {
+            color: var(--main-red);
+            font-weight: 900;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #ccc;
+            letter-spacing: 1px;
+        }
+
+        /* بانر الحجز */
+        .booking-banner {
+            background: #111;
+            border-top: 1px solid #333;
+            border-bottom: 4px solid var(--main-red);
+            padding: 16px 20px;
+        }
+
+        .booking-banner-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .booking-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .booking-title {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+
+            .booking-title::before {
+                content: '✂  ';
+                color: var(--main-red);
+            }
+
+        .booking-sub {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .booking-cta-btn {
+            background: var(--main-red);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 1rem;
+            white-space: nowrap;
+            border: 2px solid var(--main-red);
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(204,43,43,0.35);
+        }
+
+            .booking-cta-btn:hover {
+                background: transparent;
+                color: var(--main-red);
+                box-shadow: none;
+            }
+
+        /* الناف */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+        }
+
+        .nav-label {
+            display: inline-block;
+            font-size: 0.72rem;
+            color: #bbb;
+            font-weight: 700;
+            padding: 0 6px 0 10px;
+            letter-spacing: 1px;
+            vertical-align: middle;
+        }
+
+        .nav-divider {
+            display: inline-block;
+            width: 1px;
+            height: 20px;
+            background: #e0e0e0;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: 2px solid transparent;
+            padding: 8px 15px;
+            margin: 0 5px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: 0.3s;
+        }
+
+            .nav-btn.active {
+                background-color: var(--main-red);
+                color: white;
+                border-color: var(--main-red);
+            }
+
+            .nav-btn:hover:not(.active) {
+                border-color: #ddd;
+            }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .section {
+            display: none;
+            animation: slideUp 0.4s ease;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            text-align: center;
+            background-color: var(--black);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            border-bottom: 4px solid var(--main-red);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-right: 5px solid var(--black);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .menu-item:hover {
+                background-color: var(--hover-bg);
+                border-right-color: var(--main-red);
+                transform: scale(1.02);
+                box-shadow: 0 5px 15px rgba(204, 43, 43, 0.1);
+            }
+
+        .item-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .price-tag {
+            background: #eee;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 900;
+            color: var(--main-red);
+            transition: 0.3s;
+        }
+
+        .menu-item:hover .price-tag {
+            background: var(--main-red);
+            color: white;
+        }
+
+        .footer {
+            background: var(--black);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .contact-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact-btn {
+            background: white;
+            color: var(--black);
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+            .contact-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+            }
+
+            .contact-btn.whatsapp {
+                border: 2px solid #25D366;
+            }
+
+        @media (max-width: 600px) {
+            .booking-banner-inner {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .booking-text {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://img.freepik.com/premium-vector/black-white-barber-logo-design_712567-4529.jpg?w=360" alt="لوجو المايسترو" class="logo-img">
+        <h1>كوافير المايسترو</h1>
+        <p>ALMAYSTRO BARBER SHOP</p>
+    </div>
+
+    <!-- بانر الحجز منفصل -->
+    <div class="booking-banner">
+        <div class="booking-banner-inner">
+            <div class="booking-text">
+                <span class="booking-title">احجز موعدك الآن</span>
+                <span class="booking-sub">بدون انتظار — اختار وقتك وإحنا بنتواصل معاك</span>
+            </div>
+            <a href="booking.html" class="booking-cta-btn">📅 احجز موعد</a>
+        </div>
+    </div>
+
+    <!-- الناف للأقسام بس -->
+    <div class="nav-container">
+        <span class="nav-label">الخدمات</span>
+        <span class="nav-divider"></span>
+        <button class="nav-btn active" onclick="showSection('hair')">💇‍♂️ قسم الشعر</button>
+        <button class="nav-btn" onclick="showSection('beard')">🧔 قسم الذقن</button>
+        <button class="nav-btn" onclick="showSection('devices')">🔌 قسم الأجهزة</button>
+        <button class="nav-btn" onclick="showSection('creams')">🧴 قسم الكريمات</button>
+        <button class="nav-btn" onclick="showSection('masks')">🎭 قسم الماسكات</button>
+        <button class="nav-btn" onclick="showSection('wedding')">🤵 باكيدج العريس</button>
+        <button class="nav-btn" onclick="showSection('personal')">🪒 الاستعمال الشخصي</button>
+    </div>
+
+    <div class="container">
+        <div id="hair" class="section active">
+            <h2 class="section-title">💇‍♂️ قسم الشعر</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">قص شعر عادي</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">تدريج شعر عادي</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">تدريج شعر زيرو او تنعيم</span><span class="price-tag">150 ج</span></div>
+                <div class="menu-item"><span class="item-name">قص شعر كلاسيك بالمقص</span><span class="price-tag">150 ج</span></div>
+                <div class="menu-item"><span class="item-name">صبغة شعر اسود ايطالي</span><span class="price-tag">150 ج</span></div>
+                <div class="menu-item"><span class="item-name">صبغة شعر حنة</span><span class="price-tag">80 ج</span></div>
+                <div class="menu-item"><span class="item-name">صبغة شعر ألوان</span><span class="price-tag">300 : 700 ج</span></div>
+                <div class="menu-item"><span class="item-name">حلاقة شعر عادي اطفال</span><span class="price-tag">50 : 100 ج</span></div>
+            </div>
+        </div>
+        <div id="beard" class="section">
+            <h2 class="section-title">🧔 قسم الذقن</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">ذقن عادي موس او تنعيم</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">ذقن عادي بالمكنة</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">ذقن تحديد + تدريج</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">تحديد ذقن بالفتلة</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">فتلة عادي</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">صبغة ذقن ايطالي</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">صبغة ذقن حنة</span><span class="price-tag">50 ج</span></div>
+            </div>
+        </div>
+        <div id="devices" class="section">
+            <h2 class="section-title">🔌 قسم الأجهزة</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">فرشة صنفرة</span><span class="price-tag">150 ج</span></div>
+                <div class="menu-item"><span class="item-name">باندويل + تنظيف وش كامل</span><span class="price-tag">200 ج</span></div>
+                <div class="menu-item"><span class="item-name">ليزر تنظيف وش كامل</span><span class="price-tag">200 ج</span></div>
+                <div class="menu-item"><span class="item-name">شمع كامل</span><span class="price-tag">150 ج</span></div>
+                <div class="menu-item"><span class="item-name">شفط دهون او ابرة تنظيف</span><span class="price-tag">150 ج</span></div>
+                <div class="menu-item"><span class="item-name">مساج كامل</span><span class="price-tag">300 ج</span></div>
+            </div>
+        </div>
+        <div id="creams" class="section">
+            <h2 class="section-title">🧴 قسم الكريمات</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">حمام كريم</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">فرد شعر عادي</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">فرد بروتين ( 1 جرام )</span><span class="price-tag">25 ج</span></div>
+                <div class="menu-item"><span class="item-name">تسريح عادي جل او كريم</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">تسريح ويفي</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">تسريح سفنجية كيرلى</span><span class="price-tag">70 ج</span></div>
+                <div class="menu-item"><span class="item-name">لفة سسته يدوى</span><span class="price-tag">300 ج</span></div>
+                <div class="menu-item"><span class="item-name">لفة سسته مكوه</span><span class="price-tag">300 ج</span></div>
+                <div class="menu-item"><span class="item-name">استشوار عادي</span><span class="price-tag">80 ج</span></div>
+                <div class="menu-item"><span class="item-name">استشوار + تخصيل مشط</span><span class="price-tag">200 ج</span></div>
+            </div>
+        </div>
+        <div id="masks" class="section">
+            <h2 class="section-title">🎭 قسم الماسكات</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">ماسك عادي وش</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك صنفرة وش</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك رقبة</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك صنفرة رقبة</span><span class="price-tag">100 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك مستورد وش</span><span class="price-tag">70 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك مستورد صنفرة وش</span><span class="price-tag">120 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك مستورد رقبة</span><span class="price-tag">70 ج</span></div>
+                <div class="menu-item"><span class="item-name">ماسك مستورد صنفرة رقبة</span><span class="price-tag">120 ج</span></div>
+            </div>
+        </div>
+        <div id="wedding" class="section">
+            <h2 class="section-title">🤵 باكيدج العريس</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">باكيدج عادي</span><span class="price-tag">1500 ج</span></div>
+                <div class="menu-item"><span class="item-name">باكيدج مميز</span><span class="price-tag">2500 ج</span></div>
+                <div class="menu-item"><span class="item-name">باكيدج VIP</span><span class="price-tag">5000 ج</span></div>
+                <div style="text-align:center;color:var(--main-red);font-weight:bold;padding:15px;background:white;border-radius:8px;">✨ يوجد مساج كابينة سونة ✨</div>
+            </div>
+        </div>
+        <div id="personal" class="section">
+            <h2 class="section-title">🪒 قسم الاستعمال الشخصي</h2>
+            <div class="menu-grid">
+                <div class="menu-item"><span class="item-name">شفرة خاصة</span><span class="price-tag">20 ج</span></div>
+                <div class="menu-item"><span class="item-name">فوطة تنشيف خاصة</span><span class="price-tag">20 ج</span></div>
+                <div class="menu-item"><span class="item-name">فوطة قص خاصة</span><span class="price-tag">20 ج</span></div>
+                <div class="menu-item"><span class="item-name">فوطة سخنة</span><span class="price-tag">50 ج</span></div>
+                <div class="menu-item"><span class="item-name">فوطة نعناع ساقعة</span><span class="price-tag">50 ج</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <h3>كوافير المايسترو - ALMAYSTRO</h3>
+        <p>نحن نصنع الفرق في مظهرك</p>
+        <div class="contact-grid">
+            <a href="tel:0974712923" class="contact-btn">📞 0974712923</a>
+            <a href="https://wa.me/201116635508" class="contact-btn whatsapp">💬 واتساب</a>
+        </div>
+        <p style="margin-top:30px;font-size:0.8rem;opacity:0.6;">© 2026 جميع الحقوق محفوظة</p>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            window.scrollTo({ top: 200, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
