@@ -1,7 +1,5 @@
-﻿using AlMaystro.API.Models;
+using AlMaystro.API.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace AlMaystro.API.Data;
 
@@ -9,10 +7,16 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+    // ----- existing (unchanged) -----
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
+
+    // ----- new -----
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Service> Services => Set<Service>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
@@ -24,7 +28,17 @@ public class AppDbContext : DbContext
             entity.Property(e => e.CusPhone).HasColumnName("cus_phone").HasMaxLength(20);
             entity.Property(e => e.BookingDate).HasColumnName("booking_date");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+            // new columns (added by Sql/001_menu_and_booking_columns.sql)
+            entity.Property(e => e.ServiceId).HasColumnName("service_id");
+            entity.Property(e => e.Status).HasColumnName("status").HasConversion<int>();
+            entity.Property(e => e.Source).HasColumnName("source").HasConversion<int>();
+            entity.Property(e => e.Notes).HasColumnName("notes").HasMaxLength(500);
+            entity.HasOne(e => e.Service).WithMany().HasForeignKey(e => e.ServiceId)
+                  .OnDelete(DeleteBehavior.SetNull);   // deleting a service keeps old bookings
+            entity.HasIndex(e => e.BookingDate);
         });
+
         modelBuilder.Entity<Attendance>(e => {
             e.ToTable("Attendances");
             e.Property(x => x.AttendanceId).HasColumnName("AttendanceId");
@@ -46,7 +60,7 @@ public class AppDbContext : DbContext
             e.Property(x => x.CreatedAt).HasColumnName("CreatedAt");
         });
 
-        // Appointments
+        // Appointments (invoices)
         modelBuilder.Entity<Appointment>(e => {
             e.ToTable("tb_appointment");
             e.Property(x => x.Id).HasColumnName("id");
@@ -65,6 +79,22 @@ public class AppDbContext : DbContext
             e.Property(x => x.BarberName).HasColumnName("barber_name");
             e.Property(x => x.AppStatus).HasColumnName("app_status");
             e.Property(x => x.CusName).HasColumnName("cus_name");
+        });
+
+        // ----- new menu tables -----
+        modelBuilder.Entity<Category>(e =>
+        {
+            e.ToTable("Categories");
+            e.Property(x => x.Name).HasMaxLength(100);
+        });
+        modelBuilder.Entity<Service>(e =>
+        {
+            e.ToTable("Services");
+            e.Property(x => x.Name).HasMaxLength(150);
+            e.Property(x => x.PriceFrom).HasPrecision(10, 2);
+            e.Property(x => x.PriceTo).HasPrecision(10, 2);
+            e.HasOne(x => x.Category).WithMany(c => c.Services)
+             .HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

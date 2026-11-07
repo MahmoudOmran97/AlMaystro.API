@@ -1,0 +1,11 @@
+Keep YOUR existing Booking class. Only add these 4 properties to it:
+
+    public int? ServiceId { get; set; }
+    public Service? Service { get; set; }
+    public BookingStatus Status { get; set; } = BookingStatus.Pending;
+    public BookingSource Source { get; set; } = BookingSource.Web;
+    public string? Notes { get; set; }
+
+(namespace AlMaystro.API.Models already has the enums.)
+If your desktop program uses a copy of the Booking class / raw SQL INSERT into Bookings, it keeps working:
+the new columns have defaults (see the SQL script).
