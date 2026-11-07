@@ -1,4 +1,5 @@
-﻿using AlMaystro.API.Data;
+﻿using AlMaystro.API.Helpers;
+using AlMaystro.API.Data;
 using AlMaystro.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -106,7 +107,7 @@ public class AppointmentController : ControllerBase
     [HttpGet("today")]
     public async Task<IActionResult> GetToday()
     {
-        var today = DateTime.Today;
+        var today = ShopTime.Today;
         var data = await _db.Appointments
             .Where(x => x.SellDate.HasValue && x.SellDate.Value.Date == today)
             .OrderByDescending(x => x.SellDate)
@@ -133,9 +134,10 @@ public class AppointmentController : ControllerBase
     [HttpGet("summary/today")]
     public async Task<IActionResult> SummaryToday()
     {
-        var today = DateTime.Today;
+        var today = ShopTime.Today;
         var rows = await _db.Appointments
             .Where(x => x.SellDate.HasValue && x.SellDate.Value.Date == today)
+            .Select(x => new { x.Pay, x.SellTprice, x.TotalEarnings })
             .ToListAsync();
 
         return Ok(new
@@ -181,7 +183,7 @@ public class AppointmentController : ControllerBase
     [HttpDelete("cleanup")]
     public async Task<IActionResult> Cleanup()
     {
-        var cutoff = DateTime.Today.AddDays(-30);
+        var cutoff = ShopTime.Today.AddDays(-30);
         var old = await _db.Appointments
             .Where(x => x.SellDate.HasValue && x.SellDate.Value.Date < cutoff)
             .ToListAsync();

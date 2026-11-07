@@ -1,4 +1,5 @@
-﻿using AlMaystro.API.Data;
+﻿using AlMaystro.API.Helpers;
+using AlMaystro.API.Data;
 using AlMaystro.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ public class AttendanceController : ControllerBase
     [HttpGet("today")]
     public async Task<IActionResult> GetToday()
     {
-        var today = DateTime.Today;
+        var today = ShopTime.Today;
         var data = await _db.Attendances
             .Where(x => x.AttendDate.HasValue && x.AttendDate.Value.Date == today)
             .OrderBy(x => x.CheckIn)
@@ -135,7 +136,7 @@ public class AttendanceController : ControllerBase
     [HttpDelete("cleanup")]
     public async Task<IActionResult> Cleanup()
     {
-        var cutoff = DateTime.Today.AddDays(-30);
+        var cutoff = ShopTime.Today.AddDays(-30);
         var old = await _db.Attendances
             .Where(x => x.AttendDate.HasValue && x.AttendDate.Value.Date < cutoff)
             .ToListAsync();

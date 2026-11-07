@@ -1,4 +1,5 @@
-﻿using AlMaystro.API.Data;
+﻿using AlMaystro.API.Helpers;
+using AlMaystro.API.Data;
 using AlMaystro.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -118,7 +119,7 @@ public class BookingController : ControllerBase
     [HttpDelete("cleanup")]
     public async Task<IActionResult> Cleanup()
     {
-        var cutoff = DateTime.Today.AddDays(-30);
+        var cutoff = ShopTime.Today.AddDays(-30);
         var old = await _db.Bookings
             .Where(b => b.BookingDate.Date < cutoff)
             .ToListAsync();
