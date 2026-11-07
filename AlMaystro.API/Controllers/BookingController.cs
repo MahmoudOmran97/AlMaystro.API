@@ -51,7 +51,11 @@ public class BookingController : ControllerBase
                 b.CusName,
                 b.CusPhone,
                 BookingDate = b.BookingDate.ToString("yyyy-MM-dd HH:mm"),
-                CreatedAt = b.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                CreatedAt = b.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+                Status = b.Status.ToString(),
+                Source = b.Source.ToString(),
+                ServiceName = b.Service != null ? b.Service.Name : null,
+                b.Notes
             })
             .ToListAsync();
 
@@ -100,7 +104,11 @@ public class BookingController : ControllerBase
                 b.CusName,
                 b.CusPhone,
                 BookingDate = b.BookingDate.ToString("yyyy-MM-dd HH:mm"),
-                CreatedAt = b.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                CreatedAt = b.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+                Status = b.Status.ToString(),
+                Source = b.Source.ToString(),
+                ServiceName = b.Service != null ? b.Service.Name : null,
+                b.Notes
             })
             .ToListAsync();
         return Ok(bookings);

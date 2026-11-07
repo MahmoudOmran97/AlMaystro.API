@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using AlMaystro.API.Data;
@@ -28,12 +28,16 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
-// Firebase (once)
-FirebaseApp.Create(new AppOptions
+// Firebase (once) - optional: if the admin key file is missing the API still starts
+var firebaseKeyPath = Path.Combine(AppContext.BaseDirectory, "almaystroapp-firebase-adminsdk-fbsvc-7688c29b24.json");
+if (File.Exists(firebaseKeyPath))
 {
-    Credential = GoogleCredential.FromFile(
-        Path.Combine(AppContext.BaseDirectory, "almaystroapp-firebase-adminsdk-fbsvc-7688c29b24.json"))
-});
+    FirebaseApp.Create(new AppOptions { Credential = GoogleCredential.FromFile(firebaseKeyPath) });
+}
+else
+{
+    Console.WriteLine("WARNING: Firebase admin key not found. Push notifications are disabled.");
+}
 
 // ---------- new: JWT for the owner ----------
 var jwtKey = cfg["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing.");

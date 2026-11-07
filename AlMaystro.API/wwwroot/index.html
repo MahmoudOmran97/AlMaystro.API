@@ -429,13 +429,91 @@
     </div>
 
     <script>
-        function showSection(sectionId) {
+        // ===== التنقل بين الأقسام =====
+        function showSection(sectionId, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            var sec = document.getElementById(sectionId);
+            if (sec) sec.classList.add('active');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            btn = btn || (window.event && window.event.currentTarget);
+            if (btn) btn.classList.add('active');
             window.scrollTo({ top: 200, behavior: 'smooth' });
         }
+
+        // ===== المنيو بيتحمّل من التطبيق (API) =====
+        // لو الـ API وقع أو مفيش أقسام لسه، المنيو الثابت اللي فوق بيفضل ظاهر.
+        function fmt(n) { return String(Number(n)); }
+
+        function priceText(s) {
+            return s.priceTo != null
+                ? fmt(s.priceFrom) + ' : ' + fmt(s.priceTo) + ' ج'
+                : fmt(s.priceFrom) + ' ج';
+        }
+
+        function buildMenu(categories) {
+            var nav = document.querySelector('.nav-container');
+            var firstSection = document.querySelector('.section');
+            var holder = firstSection.parentNode;
+
+            nav.querySelectorAll('.nav-btn').forEach(function (b) { b.remove(); });
+            holder.querySelectorAll('.section').forEach(function (s) { s.remove(); });
+
+            categories.forEach(function (cat, i) {
+                var id = 'cat-' + cat.id;
+
+                var btn = document.createElement('button');
+                btn.className = 'nav-btn' + (i === 0 ? ' active' : '');
+                btn.textContent = cat.name;
+                btn.addEventListener('click', function () { showSection(id, btn); });
+                nav.appendChild(btn);
+
+                var sec = document.createElement('div');
+                sec.id = id;
+                sec.className = 'section' + (i === 0 ? ' active' : '');
+
+                var h2 = document.createElement('h2');
+                h2.className = 'section-title';
+                h2.textContent = cat.name;
+                sec.appendChild(h2);
+
+                var grid = document.createElement('div');
+                grid.className = 'menu-grid';
+
+                (cat.services || []).forEach(function (s) {
+                    if (Number(s.priceFrom) === 0 && s.priceTo == null) {
+                        // خدمة سعرها 0 = ملاحظة مميزة (زي: يوجد مساج كابينة سونة)
+                        var note = document.createElement('div');
+                        note.style.cssText = 'text-align:center;color:var(--main-red);font-weight:bold;padding:15px;background:white;border-radius:8px;';
+                        note.textContent = s.name;
+                        grid.appendChild(note);
+                        return;
+                    }
+                    var item = document.createElement('div');
+                    item.className = 'menu-item';
+                    var name = document.createElement('span');
+                    name.className = 'item-name';
+                    name.textContent = s.name;
+                    var price = document.createElement('span');
+                    price.className = 'price-tag';
+                    price.textContent = priceText(s);
+                    item.appendChild(name);
+                    item.appendChild(price);
+                    grid.appendChild(item);
+                });
+
+                sec.appendChild(grid);
+                holder.appendChild(sec);
+            });
+        }
+
+        (async function loadMenu() {
+            try {
+                var res = await fetch('/api/categories', { cache: 'no-store' });
+                if (!res.ok) return;
+                var cats = await res.json();
+                if (Array.isArray(cats) && cats.length > 0) buildMenu(cats);
+            } catch (e) { /* نسيب المنيو الثابت */ }
+        })();
     </script>
 </body>
 </html>
